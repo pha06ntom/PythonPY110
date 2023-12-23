@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseNotFound, HttpResponse
 from .models import DATABASE
 from django.http import HttpResponse
-from logic.services import filtering_category
+from logic.services import filtering_category, view_in_cart, add_to_cart, remove_from_cart
 
 
 # Create your views here.
@@ -53,6 +53,38 @@ def shop_view(request):
         with open('store/shop.html', encoding="utf-8") as f:
             data = f.read()
         return HttpResponse(data)
+
+
+def cart_view(request):
+    if request.method == "GET":
+        data = view_in_cart()
+        return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
+                                                     'indent': 4})
+
+
+def cart_add_view(request, id_product):
+    if request.method == "GET":
+        result = add_to_cart(id_product)
+        if result:
+            return JsonResponse({"answer": "Продукт успешно добавлен в корзину"},
+                                json_dumps_params={'ensure_ascii': False})
+        else:
+            return JsonResponse({"answer": "Неудачная попытка добавления товара в корзину"},
+                                status=404,
+                                json_dumps_params={'ensure_ascii': False})
+
+
+def cart_del_view(request, id_product):
+    if request.method == "GET":
+        result = remove_from_cart(id_product)
+        if result:
+            return JsonResponse({"answer": "Продукт успешно удален из корзины"},
+                                json_dumps_params={'ensure_ascii': False})
+        else:
+            return JsonResponse({"answer": "Неудачная поптыка удаления товара из корзины"},
+                                status=404,
+                                json_dumps_params={'ensure_ascii': False})
+
 
 
 

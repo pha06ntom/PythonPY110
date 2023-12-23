@@ -28,23 +28,25 @@ def filtering_category(database: dict,
         result.sort(key=lambda x: x[ordering_key], reverse=reverse)
     return result
 
+
 def view_in_cart() -> dict:
     """
     Просматривает содержимое cart.json
 
     :return: Содержимое 'cart.json"
     """
-    if os.path.exists('cart.json'): # Если файл существует
+    if os.path.exists('cart.json'):  # Если файл существует
         with open('cart.json', encoding='utf-8') as f:
             return json.load(f)
 
-    cart = {'product': {}} # Создаем пустую корзину
-    with open('cart.json', mode='x', encoding='utf-8') as f: # Создаем файл и записываем туда пустую корзину
+    cart = {'products': {}}  # Создаем пустую корзину
+    with open('cart.json', mode='x', encoding='utf-8') as f:  # Создаем файл и записываем туда пустую корзину
         json.dump(cart, f)
 
     return cart
 
-def add_to_cart(id_product: str):
+
+def add_to_cart(id_product: str) -> bool:
     """
         Добавляет продукт в корзину. Если в корзине нет данного продукта, то добавляет его с количеством равное 1.
         Если в корзине есть такой продукт, то добавляет количеству данного продукта + 1.
@@ -54,22 +56,53 @@ def add_to_cart(id_product: str):
         не существует).
     """
     cart = view_in_cart()
+    initial_value = 1
 
     if not DATABASE.get(id_product):
         return False
 
-    for product in cart.values():
-        if not product.get(id_product):
-            product[id_product] = 1
-        else:
-            product[id_product] += 1
-        print(product)
-    with open('cart.json', encoding='utf-8') as f:
-        json.dump(product, f)
+    if cart['products'].get(id_product):
+        cart['products'][id_product] += 1
+    else:
+        cart['products'][id_product] = initial_value
+
+    with open('cart.json', 'w', encoding='utf-8') as f:
+        json.dump(cart, f)
+
+    return True
 
 
+def remove_from_cart(id_product: str) -> bool:
+    """
+        Удаляет позицию продукта из корзины. Если в корзине есть такой продукт, то удаляется ключ в словаре
+        с этим продуктом.
+
+        :param id_product: Идентификационный номер продукта в виде строки.
+        :return: Возвращает True в случае успешного удаления, а False в случае неуспешного удаления(товара по id_product
+        не существует).
+    """
+    cart = view_in_cart()
+
+    if cart['products'].get(id_product):
+        del cart['products'][id_product]
+    else:
+        return False
+
+    with open('cart.json', 'w', encoding='utf-8') as f:
+        json.dump(cart, f)
+
+    return True
 
 
 if __name__ == "__main__":
     from store.models import DATABASE
-    print(add_to_cart('3'))
+
+    print(view_in_cart())  # {'products': {}}
+    print(add_to_cart('1'))  # True
+    print(add_to_cart('0'))  # False
+    print(add_to_cart('1'))  # True
+    print(add_to_cart('2'))  # True
+    print(view_in_cart())  # {'products': {'1': 2, '2': 1}}
+    print(remove_from_cart('0'))  # False
+    print(remove_from_cart('1'))  # True
+    print(view_in_cart())
