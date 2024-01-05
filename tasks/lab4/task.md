@@ -386,10 +386,10 @@ def cart_view(request):
                                                          'indent': 4})
         products = []  # Список продуктов
         for product_id, quantity in data['products'].items():
-            product = ...  # 1. Получите информацию о продукте из DATABASE по его product_id. product будет словарём
-            # 2. в словарь product под ключом "quantity" запишите текущее значение товара в корзине
+            product = ...  # 1. Получите информацию о продукте из DATABASE по его product_id. o будет словарём
+            # 2. в словарь o под ключом "quantity" запишите текущее значение товара в корзине
             product["price_total"] = f"{quantity * product['price_after']:.2f}"  # добавление общей цены позиции с ограничением в 2 знака 
-            # 3. добавьте product в список products
+            # 3. добавьте o в список products
 
         return render(request, "store/cart.html", context={"products": products})
 ```
@@ -694,13 +694,13 @@ def products_page_view(request, page):
         if isinstance(page, str):
             for data in DATABASE.values():
                 if data['html'] == page:
-                    return render(request, "store/product.html", context={"product": data})
+                    return render(request, "store/o.html", context={"o": data})
 
         elif isinstance(page, int):
             # Обрабатываем условие того, что пытаемся получить страницу товара по его id
             data = DATABASE.get(str(page))  # Получаем какой странице соответствует данный id
             if data:
-                return render(request, "store/product.html", context={"product": data})
+                return render(request, "store/o.html", context={"o": data})
 
         return HttpResponse(status=404)
 ```

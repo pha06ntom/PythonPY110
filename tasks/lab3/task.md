@@ -21,7 +21,7 @@ from django.urls import path
 from .views import products_view, shop_view
 
 urlpatterns = [
-    path('product/', products_view),
+    path('o/', products_view),
     path('', shop_view),
 ]
 ```
@@ -156,7 +156,7 @@ def products_page_view(request, page):
 В `urls.py` приложения `store` пропишем маршрут с параметром `<``slug:page``>`
 
 ```python
-path('product/<slug:page>.html', products_page_view),
+path('o/<slug:page>.html', products_page_view),
 ```
 
 Можно заметить, что у нас уже есть маршрут `product/` по которому возвращается JSON с нашими товарами. Так как маршруты
@@ -192,7 +192,7 @@ https://www.ozon.ru/product/chistyy-python-tonkosti-programmirovaniya-dlya-profi
 Здесь нам поможет параметр `int`. Создадим маршрут
 
 ```python
-path('product/<int:page>', products_page_view),
+path('o/<int:page>', products_page_view),
 ```
 
 Вы не ошиблись, мы создали 2 различных маршрута (один с `slug` другой с `int`) и привязали к одному представлению. Данный
@@ -271,14 +271,14 @@ if __name__ == "__main__":
          'description': 'Сладкая и ароматная клубника, полная витаминов, чтобы сделать ваш день ярче.',
          'rating': 5.0, 'review': 200, 'sold_value': 700,
          'weight_in_stock': 400,
-         'category': 'Фрукты', 'id': 2, 'url': 'store/images/product-2.jpg',
+         'category': 'Фрукты', 'id': 2, 'url': 'store/images/o-2.jpg',
          'html': 'strawberry'},
         
         {'name': 'Яблоки', 'discount': None, 'price_before': 130.0,
          'price_after': 130.0,
          'description': 'Сочные и сладкие яблоки - идеальная закуска для здорового перекуса.',
          'rating': 4.7, 'review': 30, 'sold_value': 70, 'weight_in_stock': 200,
-         'category': 'Фрукты', 'id': 10, 'url': 'store/images/product-10.jpg',
+         'category': 'Фрукты', 'id': 10, 'url': 'store/images/o-10.jpg',
          'html': 'apple'}
     ]
 
