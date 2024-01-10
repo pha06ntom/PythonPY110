@@ -19,9 +19,6 @@ def wishlist_view(request):
         products = []
         for product_id in data['products']:
             product = DATABASE[product_id]
-            # product = {"name": DATABASE[product_id]["name"],
-            #            # "descriptions": DATABASE[product_id]["descriptions"],
-            #            }
             products.append(product)
         return render(request, "wishlist/wishlist.html", context={"products": products})
 

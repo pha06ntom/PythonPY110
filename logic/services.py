@@ -186,7 +186,7 @@ def add_user_to_wishlist(request, username: str) -> None:
 
     if not wishlist:  # Если пользователя не было в избранном, то создаем его и записываем в базу
         with open('wishlist.json', mode='w', encoding='utf-8') as f:
-            wishlist_users[username] = {'products': {}}
+            wishlist_users[username] = {'products': []}
             json.dump(wishlist_users, f)
 
 

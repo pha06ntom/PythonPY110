@@ -6,6 +6,7 @@ from logic.services import filtering_category, view_in_cart, add_to_cart, remove
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
+from itertools import islice
 
 
 # Create your views here.
@@ -37,8 +38,14 @@ def products_page_view(request, page):
     if request.method == "GET":
         if isinstance(page, str):
             for data in DATABASE.values():
-                if data['html'] == page:
-                    return render(request, "store/product.html", context={"product": data})
+                if data['html'] == page: # если значение переданного параметра совпадает с именем html файла (page = 'onion')
+                    category_key = data['category']
+                    all_products_category = filtering_category(DATABASE, category_key) # Список всех товаров той же категории
+                    other_products = [product for product in all_products_category if product['html'] != data['html']]# Исключение продукта.
+                    # переданного в параметре запроса. Актуальное состояние для категории
+                    other_products_limit = list(islice(other_products, 5))
+                    return render(request, "store/product.html",
+                                  context={"product": data, "other_products": other_products_limit})
                     # with open(f'store/products/{page}.html', encoding="utf-8") as file:
                     #     data_product = file.read()
                     # return HttpResponse(data_product)
